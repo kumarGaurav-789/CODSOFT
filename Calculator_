@@ -1,0 +1,83 @@
+def add(a, b):
+    return a + b
+
+def subtract(a, b):
+    return a - b
+
+def multiply(a, b):
+    return a * b
+
+def divide(a, b):
+    try:
+        return a / b
+    except ZeroDivisionError:
+        return "Error: Cannot divide by zero"
+
+operations_dict = {
+    "+": add,
+    "-": subtract,
+    "*": multiply,
+    "/": divide
+}
+
+def calculator():
+    current_result = None
+    first_input = True
+
+    while True:
+        if first_input:
+            while True:
+                try:
+                    num1_input = input("Enter first number: ")
+                    number1 = float(num1_input)
+                    break
+                except ValueError:
+                    print("Invalid input. Please enter a valid number.")
+            first_input = False
+        else:
+            number1 = current_result
+
+        print("Available operations:")
+        for symbol in operations_dict:
+            print(symbol)
+
+        op_symbol = input("Pick an operation: ")
+
+        if op_symbol not in operations_dict:
+            print("Invalid operation symbol. Please pick from +, -, *, /.")
+            continue
+
+        while True:
+            try:
+                num2_input = input("Enter next number: ")
+                number2 = float(num2_input)
+                break
+            except ValueError:
+                print("Invalid input. Please enter a valid number.")
+
+        calculation_function = operations_dict[op_symbol]
+        output = calculation_function(number1, number2)
+
+        if isinstance(output, str) and "Error" in output:
+            print(output)
+            first_input = True
+            current_result = None
+        else:
+            print(f"{number1} {op_symbol} {number2} = {output}")
+            current_result = output
+
+        while True:
+            should_continue = input(f"Enter 'y' to continue calculation with {current_result}, 'n' to start a new calculation, or 'x' to exit: ").lower()
+            if should_continue in ['y', 'n', 'x']:
+                break
+            else:
+                print("Invalid choice. Please enter 'y', 'n', or 'x'.")
+
+        if should_continue == 'x':
+            print("Goodbye!")
+            break
+        elif should_continue == 'n':
+            first_input = True
+            current_result = None
+
+calculator()
