@@ -1,0 +1,151 @@
+# contacts_app.py
+
+def display_menu():
+    print("\n--- Contact Book Menu ---")
+    print("1. Add New Contact")
+    print("2. View All Contacts")
+    print("3. Search Contact")
+    print("4. Update Contact")
+    print("5. Delete Contact")
+    print("6. Exit")
+    print("-------------------------")
+
+def add_contact(contacts):
+    print("\n--- Add New Contact ---")
+    name = input("Enter contact name: ").strip()
+    if not name:
+        print("Error: Contact name cannot be empty.")
+        return
+
+    for contact in contacts:
+        if contact['name'].lower() == name.lower():
+            print(f"Contact with name '{name}' already exists.")
+            return
+
+    phone = input("Enter phone number: ").strip()
+    email = input("Enter email address: ").strip()
+    address = input("Enter address: ").strip()
+
+    new_contact = {
+        'name': name,
+        'phone': phone,
+        'email': email,
+        'address': address
+    }
+    contacts.append(new_contact)
+    print(f"Contact '{name}' added successfully!")
+
+def view_contacts(contacts):
+    print("\n--- View All Contacts ---")
+    if not contacts:
+        print("No contacts available. Please add some contacts first.")
+        return
+
+    for i, contact in enumerate(contacts):
+        print(f"{i + 1}. Name: {contact['name']}, Phone: {contact['phone']}")
+    print("-------------------------")
+
+def search_contact(contacts):
+    print("\n--- Search Contact ---")
+    if not contacts:
+        print("No contacts to search. Please add some contacts first.")
+        return
+
+    search_term = input("Enter name or phone number to search: ").strip().lower()
+    found_contacts = []
+
+    for contact in contacts:
+        if search_term in contact['name'].lower() or search_term in contact['phone'].lower():
+            found_contacts.append(contact)
+
+    if not found_contacts:
+        print(f"No contacts found matching '{search_term}'.")
+    else:
+        print(f"\n--- Found {len(found_contacts)} Contact(s) ---")
+        for i, contact in enumerate(found_contacts):
+            print(f"Contact {i + 1}:")
+            print(f"  Name: {contact['name']}")
+            print(f"  Phone: {contact['phone']}")
+            print(f"  Email: {contact['email']}")
+            print(f"  Address: {contact['address']}")
+            print("-------------------------")
+
+def update_contact(contacts):
+    print("\n--- Update Contact ---")
+    if not contacts:
+        print("No contacts to update. Please add some contacts first.")
+        return
+
+    name_to_update = input("Enter the name of the contact to update: ").strip()
+    found_contact = None
+
+    for contact in contacts:
+        if contact['name'].lower() == name_to_update.lower():
+            found_contact = contact
+            break
+
+    if found_contact is None:
+        print(f"Contact '{name_to_update}' not found.")
+        return
+
+    print(f"Found contact: {found_contact['name']}. Enter new details (leave blank to keep current value):")
+
+    new_name = input(f"New name ({found_contact['name']}): ").strip()
+    if new_name:
+        found_contact['name'] = new_name
+
+    new_phone = input(f"New phone number ({found_contact['phone']}): ").strip()
+    if new_phone:
+        found_contact['phone'] = new_phone
+
+    new_email = input(f"New email address ({found_contact['email']}): ").strip()
+    if new_email:
+        found_contact['email'] = new_email
+
+    new_address = input(f"New address ({found_contact['address']}): ").strip()
+    if new_address:
+        found_contact['address'] = new_address
+
+    print(f"Contact '{found_contact['name']}' updated successfully!")
+
+def delete_contact(contacts):
+    print("\n--- Delete Contact ---")
+    if not contacts:
+        print("No contacts to delete. Please add some contacts first.")
+        return
+
+    name_to_delete = input("Enter the name of the contact to delete: ").strip()
+    original_len = len(contacts)
+
+    contacts[:] = [contact for contact in contacts if contact['name'].lower() != name_to_delete.lower()]
+
+    if len(contacts) < original_len:
+        print(f"Contact '{name_to_delete}' deleted successfully!")
+    else:
+        print(f"Contact '{name_to_delete}' not found.")
+
+def main():
+    contacts = []
+
+    while True:
+        display_menu()
+        choice = input("Enter your choice (1-6): ").strip()
+
+        if choice == '1':
+            add_contact(contacts)
+        elif choice == '2':
+            view_contacts(contacts)
+        elif choice == '3':
+            search_contact(contacts)
+        elif choice == '4':
+            update_contact(contacts)
+        elif choice == '5':
+            delete_contact(contacts)
+        elif choice == '6':
+            print("Exiting Contact Book. Goodbye!")
+            break
+        else:
+            print("Invalid choice. Please enter a number between 1 and 6.")
+
+if __name__ == "__main__":
+    main()
